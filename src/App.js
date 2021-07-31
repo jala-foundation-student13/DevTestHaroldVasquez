@@ -1,18 +1,19 @@
 import './App.css';
 import { useEffect, useState } from 'react';
+import Person from './person'
 
 function App() {
   
   const url = 'https://randomuser.me/api/?page=2&results=10&seed=abc'
   
-  const [apiList, setApiList] = useState()
+  const [apiList, setApiList] = useState([])
   
   const apiCall = async () =>{
     const response = await fetch(url, {
       method : 'GET'
     })
-    const responseJson = response.json();
-    setApiList(responseJson);
+    const responseJson = await response.json();
+    setApiList(responseJson.results);
   }
 
   
@@ -21,20 +22,15 @@ function App() {
     apiCall();
   }, [])
 
-  // console.log(apiList);
+  console.log(apiList);
   return (
     <div className="App">
-      if(!apiList){
-        'Cargando...'
+      <ul>
+      { 
+        !apiList?console.log('wait...'):
+        console.log('success')
       }
-      else{
-        apiList.map( (element, index) =>{
-          return <li key = {index}>
-            {element.gender}
-            
-          </li>
-        })
-      }
+      </ul>
     </div>
   );
 }
