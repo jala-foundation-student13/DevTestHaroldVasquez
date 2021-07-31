@@ -18,6 +18,9 @@ function App() {
   const [apiList, setApiList] = useState([]);
   const [listSort, setListSort] = useState([]);
   const [onNameClick, setOnNameClick] = useState(false);
+  const [onLastnameClick, setOnLastnameClick] = useState(false);
+  const [onEmailClick, setOnEmailClick] = useState(false);
+  const [onLocationClick, setOnLocationClick] = useState(false);
   
   const apiCall = async () =>{
     const response = await fetch(url, {
@@ -30,10 +33,31 @@ function App() {
 
   useEffect(() => {
     const sortBU = [].concat(apiList);
-    sortBU.sort((a, b) => a.item > b.item?1:-1)
+    sortBU.sort((a, b) => a.name.first > b.name.first?1:-1)
     setListSort(sortBU);
     console.log(sortBU);
   }, [onNameClick])
+
+  useEffect(() => {
+    const sortBU = [].concat(apiList);
+    sortBU.sort((a, b) => a.name.last > b.name.last?1:-1)
+    setListSort(sortBU);
+    console.log(sortBU);
+  }, [onLastnameClick])
+
+  useEffect(() => {
+    const sortBU = [].concat(apiList);
+    sortBU.sort((a, b) => a.email > b.email?1:-1)
+    setListSort(sortBU);
+    console.log(sortBU);
+  }, [onEmailClick])
+
+  useEffect(() => {
+    const sortBU = [].concat(apiList);
+    sortBU.sort((a, b) => a.location.street.name > b.location.street.name?1:-1)
+    setListSort(sortBU);
+    console.log(sortBU);
+  }, [onLocationClick])
 
   // useEffect(() => {
   //   setApiList(listSort)
@@ -68,31 +92,43 @@ function App() {
       <table border = '2px'>
         <td onClick = {()=>{
           setOnNameClick(!onNameClick);
-        }}>username</td>
-        <td>firstname</td>
-        <td>lastname</td>
-        <td>email</td>
-        <td>location</td>
+        }}>first name</td>
+        <td onClick = {()=>{
+          setOnLastnameClick(!onLastnameClick);
+        }}>last name</td>
+        <td onClick = {()=>{
+          setOnEmailClick(!onEmailClick);
+        }}>email</td>
+        <td onClick = {()=>{
+          setOnLocationClick(!onLocationClick);
+        }}>location</td>
         
       </table>
 
-      <List align = 'center'>
+      
         {
           !listSort? 'Cargando...':
           listSort.map((item, index) => {
-            return <ListItem key = {index}>
-            <ListItemText
-              primary = {
-                item.name.first
-              }
-              secondary = {item.name.last}
-            />
-            </ListItem>
-            
-            
+            return <div>
+            <List align = 'center'>
+              <ListItem key = {index}>
+                <ListItemText
+                  primary = {
+                    item.name.first
+                  }
+                />
+              <td>{item.name.last}</td>
+              <td>{"____"}</td>
+              <td>{item.email}</td>
+              <td>{"____"}</td>
+              <td>{item.location.street.name}</td>
+              </ListItem>
+
+            </List> 
+            </div>     
           })
         }
-      </List>
+      
 
       
 
