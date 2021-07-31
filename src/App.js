@@ -7,7 +7,7 @@ import Location from './location';
 import Street from './street';
 import Coordinates from './coordinates';
 import Timezone from './timezone';
-import { Button, List, ListItem, ListItemText } from '@material-ui/core';
+import { Button, Input, List, ListItem, ListItemText } from '@material-ui/core';
 
 
 
@@ -16,9 +16,8 @@ function App() {
   const url = 'https://randomuser.me/api/?page=2&results=10&seed=abc'
   
   const [apiList, setApiList] = useState([]);
-  const [listResults, setListResults] = useState([]);
-
-  
+  const [listSort, setListSort] = useState([]);
+  const [onNameClick, setOnNameClick] = useState(false);
   
   const apiCall = async () =>{
     const response = await fetch(url, {
@@ -26,42 +25,74 @@ function App() {
     })
     const responseJson = await response.json();
     setApiList(responseJson.results);
+    setListSort(responseJson.results);
   }
 
-  const saveItem = () => {
+  useEffect(() => {
+    const sortBU = [].concat(apiList);
+    sortBU.sort((a, b) => a.item > b.item?1:-1)
+    setListSort(sortBU);
+    console.log(sortBU);
+  }, [onNameClick])
 
-  }
+  // useEffect(() => {
+  //   setApiList(listSort)
+  // }, [listSort])
 
-  
 
   useEffect(() => {
     apiCall();
   }, [])
 
   
-  
+//   const handleAux = (event) => {
+//     event.preventDefault();
+//     const ageInput = event.target.elements.age; // accessing via `form.elements`
+//     console.log(ageInput.value); // output: '18'
+// };
+
+
+
   return (
     <div className="App">
       
       <h1 align = 'center'>CONTACTS APP</h1>
 
-      <List align = 'center' margin>
-            {
-              !apiList? 'Cargando...':
-              apiList.map((item, index) => {
-                return <ListItem key = {index}>
-                <ListItemText
-                  primary = {
-                    item.name.first
-                  }
-                  secondary = {item.name.last}
-                />
-                </ListItem>
-                
-                
-              })
-            }
-          </List>
+      {/* <form onSubmit={handleAux}>
+        
+        <Input type="number" name="age" min="18" max="60" defaultValue="18" />
+        <Input type="submit" />
+      </form> */}
+
+      {/* {for(var i = 0; i < apiList.length(); i++)} */}
+      <table border = '2px'>
+        <td onClick = {()=>{
+          setOnNameClick(!onNameClick);
+        }}>username</td>
+        <td>firstname</td>
+        <td>lastname</td>
+        <td>email</td>
+        <td>location</td>
+        
+      </table>
+
+      <List align = 'center'>
+        {
+          !listSort? 'Cargando...':
+          listSort.map((item, index) => {
+            return <ListItem key = {index}>
+            <ListItemText
+              primary = {
+                item.name.first
+              }
+              secondary = {item.name.last}
+            />
+            </ListItem>
+            
+            
+          })
+        }
+      </List>
 
       
 
@@ -103,7 +134,7 @@ function App() {
 
           newResult.location = newLocation;
           //email
-          console.log(newResult);
+          // console.log(newResult);
           
           // return <li key = {index}>{item.gender}</li>
         })
